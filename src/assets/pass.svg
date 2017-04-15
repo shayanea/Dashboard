@@ -1,0 +1,18 @@
+
+<svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+width="50px" height="50px" viewBox="0 0 50 50" enable-background="new 0 0 50 50" xml:space="preserve">
+<g>
+	<g>
+		<path fill="none" stroke="#ECCB32" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="10" d="
+		M15.531,42.006c-0.89,0-1.612-0.72-1.612-1.61V24.142c0-0.891,0.721-1.612,1.612-1.612h19.476c0.891,0,1.61,0.721,1.61,1.612
+		v16.255c0,0.89-0.719,1.61-1.61,1.61H15.531z"/>
+	</g>
+	<g>
+		<circle fill="#ECCB32" cx="25.278" cy="30.346" r="2.822"/>
+		<path fill="#ECCB32" d="M26.352,35.925c0,0.589-0.483,1.072-1.078,1.072l0,0c-0.591,0-1.072-0.483-1.072-1.072v-4.107
+		c0-0.593,0.481-1.076,1.072-1.076l0,0c0.595,0,1.078,0.483,1.078,1.076V35.925z"/>
+	</g>
+	<path fill="none" stroke="#ECCB32" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="10" d="
+	M17.726,22.53v-4.974c0-4.164,3.377-7.543,7.543-7.543l0,0c4.164,0,7.542,3.378,7.542,7.543v4.974"/>
+</g>
+</svg>
