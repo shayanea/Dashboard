@@ -1,21 +1,21 @@
 <template>
     <div id="BottomLogo">
-        <!--<svg version="1.1" id="Bracket1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 5 505.069" enable-background="new 0 0 5 505.069" xml:space="preserve">
-            <path d="M91.634,57.722v159.458c0,2.413-0.124,4.577-0.361,6.494c-0.248,1.928-0.609,4.092-1.082,6.493
-            c-6.742,8.659-16.359,15.152-28.861,19.481c12.018,3.372,21.646,9.381,28.861,18.039c0.473,2.412,0.834,4.814,1.082,7.215
-            c0.237,2.412,0.361,4.813,0.361,7.214v165.952c0,4.329,2.165,6.493,6.494,6.493h44.013v50.507H91.634h0.722
-            c-14.431-1.443-26.584-7.576-36.438-18.399c-9.864-10.822-14.791-23.686-14.791-38.601V282.117c0-4.803-2.412-7.214-7.215-7.214H0
-            v-50.507h33.912c4.803,0,7.215-2.401,7.215-7.215V57.722c0-15.874,5.524-29.458,16.595-40.766C68.782,5.66,82.254,0,98.128,0h44.013
-            v50.507H98.128C93.798,50.507,91.634,52.919,91.634,57.722z"></path>
+        <svg v-on:click="GoToSite" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+        viewBox="0 0 1258.8 505.1" style="enable-background:new 0 0 1258.8 505.1;" xml:space="preserve">
+            <path class="baracket1" d="M91.6,57.7v159.5c0,2.4-0.1,4.6-0.4,6.5c-0.2,1.9-0.6,4.1-1.1,6.5c-6.7,8.7-16.4,15.2-28.9,19.5c12,3.4,21.6,9.4,28.9,18
+            c0.5,2.4,0.8,4.8,1.1,7.2c0.2,2.4,0.4,4.8,0.4,7.2v166c0,4.3,2.2,6.5,6.5,6.5h44v50.5H91.6h0.7c-14.4-1.4-26.6-7.6-36.4-18.4
+            c-9.9-10.8-14.8-23.7-14.8-38.6v-166c0-4.8-2.4-7.2-7.2-7.2H0v-50.5h33.9c4.8,0,7.2-2.4,7.2-7.2V57.7c0-15.9,5.5-29.5,16.6-40.8
+            C68.8,5.7,82.3,0,98.1,0h44v50.5h-44C93.8,50.5,91.6,52.9,91.6,57.7z"/>
+            <path class="paragraph" d="M393.9,0v505.1h-50.5V252.5H243.1v252.5h-50.5V0h50.5v202h100.3V0H393.9z"/>
+            <path class="paragraph" d="M491.3,50.5v150.8h105.3v50.5H491.3v202.7h131.3v50.5H440.8V201.3h50.5L440.8,0h181.8v50.5H491.3z"/>
+            <path class="paragraph" d="M826.8,228.7l76.5,276.3h-53.4l-62.8-239.5l-62.8,239.5h-54.1l76.5-276.3L669.6,0h55.6l62.1,194.8L848.5,0h55.6L826.8,228.7
+            z"/>
+            <path class="baracket2" d="M997.8,447.3V287.9c0-2.4,0.1-4.6,0.4-6.5c0.2-1.9,0.6-4.1,1.1-6.5c6.7-8.7,16.3-15.2,28.9-19.5c-12-3.4-21.6-9.4-28.9-18
+            c-0.5-2.4-0.8-4.8-1.1-7.2c-0.2-2.4-0.4-4.8-0.4-7.2V57c0-4.3-2.2-6.5-6.5-6.5h-44V0h50.5h-0.7c14.4,1.4,26.6,7.6,36.4,18.4
+            c9.9,10.8,14.8,23.7,14.8,38.6v166c0,4.8,2.4,7.2,7.2,7.2h33.9v50.5h-33.9c-4.8,0-7.2,2.4-7.2,7.2v159.5c0,15.9-5.5,29.5-16.6,40.8
+            c-11.1,11.3-24.5,17-40.4,17h-44v-50.5h44C995.7,454.6,997.8,452.2,997.8,447.3z"/>
+            <circle class="circle" cx="1205.4" cy="451.7" r="53.3" style="fill:rgb(234, 198, 27);"/>
         </svg>
-        <svg version="1.1" id="Bracket2" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 5 505.069" enable-background="new 0 0 5 505.069" xml:space="preserve">
-            <path d="M997.845,447.347V287.889c0-2.401,0.113-4.566,0.361-6.494c0.237-1.916,0.598-4.081,1.083-6.493
-            c6.73-8.659,16.347-15.152,28.861-19.481c-12.029-3.36-21.645-9.381-28.861-18.039c-0.485-2.401-0.846-4.803-1.083-7.215
-            c-0.248-2.401-0.361-4.803-0.361-7.214V57c0-4.329-2.165-6.493-6.494-6.493h-44.013V0h50.507h-0.721
-            c14.43,1.443,26.572,7.576,36.437,18.399c9.854,10.822,14.791,23.698,14.791,38.601v165.952c0,4.813,2.402,7.214,7.215,7.214h33.911
-            v50.507h-33.911c-4.813,0-7.215,2.413-7.215,7.215v159.458c0,15.874-5.535,29.469-16.595,40.766
-            c-11.071,11.307-24.532,16.956-40.405,16.956h-44.013v-50.507h44.013C995.681,454.561,997.845,452.16,997.845,447.347z"></path>
-        </svg>-->
     </div>
 </template>
 
@@ -26,6 +26,11 @@ export default {
         return {
 
         }
+    },
+    methods : {
+        GoToSite : function () {
+            window.open('http://hex.team/','_blank');
+        }
     }
 }
 </script>
@@ -35,10 +40,87 @@ export default {
     position: fixed;
     left: 40px;
     bottom: 40px;
+    cursor: pointer;
 }
-#Bracket1,
-#Bracket2{
-    width: 20px;
-    height: 20px;
+#BottomLogo svg{
+    width: 70px;
+    opacity: .4;
+}
+#BottomLogo .paragraph{
+    opacity: 0;
+}
+#BottomLogo:hover .paragraph{
+    opacity: 1;
+    -webkit-transition: all .2s ease;
+    -moz-transition: all .2s ease;
+    -o-transition: all .2s ease;
+    -ms-transition: all .2s ease;
+    transition: all .2s ease;
+}
+#BottomLogo:hover .paragraph:nth-child(2){
+    -webkit-transition-delay: .20s;
+    -moz-transition-delay: .20s;
+    -o-transition-delay: .20s;
+    transition-delay: .20s;   
+}
+#BottomLogo:hover .paragraph:nth-child(3){
+    -webkit-transition-delay: .23s;
+    -moz-transition-delay: .23s;
+    -o-transition-delay: .23s;
+    transition-delay: .23s;
+}
+#BottomLogo:hover .paragraph:nth-child(4){
+    -webkit-transition-delay: .26s;
+    -moz-transition-delay: .26s;
+    -o-transition-delay: .26s;
+    transition-delay: .26s;    
+}
+#BottomLogo .baracket2{
+    -webkit-transform: translate(-600px, 0%);
+    -o-transform: translate(-600px, 0%);
+    -moz-transform: translate(-600px, 0%);
+    transform: translate(-600px, 0%);
+    -webkit-transition: all .2s ease;
+    -moz-transition: all .2s ease;
+    -o-transition: all .2s ease;
+    -ms-transition: all .2s ease;
+    transition: all .2s ease;
+}
+#BottomLogo:hover .baracket2{
+    -webkit-transform: translate(0%, 0%);
+    -o-transform: translate(0%, 0%);
+    -moz-transform: translate(0%, 0%);
+    transform: translate(0%, 0%);
+    -webkit-transition: all .2s ease;
+    -moz-transition: all .2s ease;
+    -o-transition: all .2s ease;
+    -ms-transition: all .2s ease;
+    transition: all .2s ease;
+    -webkit-transition-delay: .1s;
+    -moz-transition-delay: .1s;
+    -o-transition-delay: .1s;
+    transition-delay: .1s;
+}
+#BottomLogo .circle{
+    -webkit-transform: translate(-960px, -202px);
+    -o-transform: translate(-960px, -202px);
+    -moz-transform: translate(-960px, -202px);
+    transform: translate(-960px, -202px);
+    -webkit-transition: all .2s ease;
+    -moz-transition: all .2s ease;
+    -o-transition: all .2s ease;
+    -ms-transition: all .2s ease;
+    transition: all .2s ease;
+}
+#BottomLogo:hover .circle{
+    -webkit-transform: translate(0%, 0%);
+    -o-transform: translate(0%, 0%);
+    -moz-transform: translate(0%, 0%);
+    transform: translate(0%, 0%);
+    -webkit-transition: all .2s ease;
+    -moz-transition: all .2s ease;
+    -o-transition: all .2s ease;
+    -ms-transition: all .2s ease;
+    transition: all .2s ease;
 }
 </style>
