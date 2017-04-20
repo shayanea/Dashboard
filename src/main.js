@@ -3,8 +3,14 @@
 import Vue from 'vue'
 import App from './App'
 import router from './router'
+import Http from 'vue-resource'
+import VueQuillEditor from 'vue-quill-editor'
 
 Vue.config.productionTip = false
+
+Vue.use(Http)
+
+Vue.use(VueQuillEditor)
 
 /* eslint-disable no-new */
 new Vue({

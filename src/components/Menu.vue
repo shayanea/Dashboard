@@ -112,6 +112,8 @@ export default {
     top: 40px;
     right: 40px;
     width: auto;
+    z-index: 9;
+    z-index: 999;
 }
 #menu nav{
     display: block;
@@ -156,6 +158,7 @@ export default {
     -o-transition: all .6s ease;
     -ms-transition: all .6s ease;
     transition: all .6s ease;
+    overflow: hidden;
 }
 #menu .nav_list.show{
     max-height: 1000px;
@@ -166,6 +169,7 @@ export default {
     -ms-transition: all .6s ease;
     transition: all .6s ease;
     padding-bottom: 10px;
+    overflow: visible;
 }
 #menu .nav_list li{
     background-color: transparent;

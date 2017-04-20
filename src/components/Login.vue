@@ -2,7 +2,7 @@
 	<div id="Login">
 		<div class="container">
 			<div class="row">
-				<div class="col-md-9 col-sm-8 col-xs-12 shadow_box">
+				<div class="col-md-9 col-sm-8 col-xs-12 shadow_box" v-bind:class="{ remove_shadow : Success }">
 					<div class="loader" v-show="ShowLoader">
 						<svg version="1.1" id="loader-1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" width="40px" height="40px" viewBox="0 0 50 50" style="enable-background:new 0 0 50 50;" xml:space="preserve">
 							<path fill="#fff" d="M25.251,6.461c-10.318,0-18.683,8.365-18.683,18.683h4.068c0-8.071,6.543-14.615,14.615-14.615V6.461z" transform="rotate(137.96 25 25)">
@@ -11,9 +11,10 @@
 						</svg>
 					</div>
 					<div class="row">
-						<div class="col-md-8 col-sm-7 col-xs-12 login_bg" v-bind:class="{ hide_login_bg : Success }">
+						<div class="col-md-8 col-sm-7 col-xs-12 login_bg" v-bind:class="{ fade_login_bg : Success }">
+							<error :status="alert.status" :text="alert.message"></error>	
 						</div>
-						<div class="col-md-4 col-sm-5 col-xs-12 login_side" v-bind:class="{ center_login_side : Success }">
+						<div class="col-md-4 col-sm-5 col-xs-12 login_side" v-bind:class="{ fade_login_form : Success }">
 							<img src="../assets/login_logo.png" class="login_logo" />
 							<h2>سیستم مدیریت وب سایت</h2>
 							<form class="login_form" @submit.prevent="Login">
@@ -34,6 +35,8 @@
 </template>
 
 <script>
+import Error from './LoginError'
+
 export default {
 	name: 'login',
 	data() {
@@ -43,11 +46,18 @@ export default {
 			model:{
 				username: '',
 				password: ''
+			},
+			alert:{
+				status: false,
+				message: ''
 			}
 		}
 	},
 	created() {
-		document.title = "login";
+		document.title = "صفحه ورود کاربران";
+	},
+	components:{
+		'error' : Error
 	},
 	methods:{
 		RemovePlaceholder : function(e){
@@ -57,8 +67,31 @@ export default {
 			e.target.placeholder = e.target.attributes['data-placeholder'].value;
 		},
 		Login : function(e){
+			
+			this.alert.status = false;
 			this.ShowLoader = true;
-			// this.Success = true;
+			this.$http.post('https://invoice-management.herokuapp.com/api/auth/login',{
+				email: this.model.username,
+				password: this.model.password
+			}).then(response => {
+				this.ShowLoader = false;
+				if(response.status == 200){
+					this.Success = true;
+					localStorage.setItem('Authorization',response.body.Token);
+					var self = this;
+					setTimeout(function(){
+						self.$router.push({ path: '/about' });
+					},1000);
+				}
+			}, response => {
+				this.ShowLoader = false;
+				this.alert.status = true;
+				if(response.status == 404){
+					this.alert.message = "کاربر با این مشخصات موجود نیست."
+				}else if(response.status == 400){
+					this.alert.message = "رمز عبور شما اشتباه است.";
+				}
+			});
 		}
 	}
 }
@@ -67,6 +100,7 @@ export default {
 <style>
 #Login .container .row [class*=' col-'] {
 	min-height: 550px;
+	max-height: 550px;
 }
 
 #Login .shadow_box {
@@ -77,12 +111,390 @@ export default {
     -moz-transform: translate(-50%, -50%);
     -webkit-transform: translate(-50%, -50%);
     transform: translate(-50%, -50%);
-	box-shadow: 0 15px 40px rgba(0, 0, 0, 0.2);
+	overflow: hidden;
+	-webkit-animation: ShowShadow .1s forwards 2s;
+	-moz-animation: ShowShadow .1s forwards 2s;
+	-o-animation: ShowShadow .1s forwards 2s;
+	animation: ShowShadow .1s forwards 2s;
+}
+
+@-webkit-keyframes ShowShadow {
+	0% {
+		-webkit-box-shadow: 0 15px 40px rgba(0, 0, 0, 0);
+		-moz-box-shadow: 0 15px 40px rgba(0, 0, 0, 0);
+		-o-box-shadow: 0 15px 40px rgba(0, 0, 0, 0);
+		box-shadow: 0 15px 40px rgba(0, 0, 0, 0);
+	}
+	100% {
+		-webkit-box-shadow: 0 15px 40px rgba(0, 0, 0, 0.2);
+		-moz-box-shadow: 0 15px 40px rgba(0, 0, 0, 0.2);
+		-o-box-shadow: 0 15px 40px rgba(0, 0, 0, 0.2);
+		box-shadow: 0 15px 40px rgba(0, 0, 0, 0.2);
+	}
+}
+@-moz-keyframes ShowShadow {
+	0% {
+		-webkit-box-shadow: 0 15px 40px rgba(0, 0, 0, 0);
+		-moz-box-shadow: 0 15px 40px rgba(0, 0, 0, 0);
+		-o-box-shadow: 0 15px 40px rgba(0, 0, 0, 0);
+		box-shadow: 0 15px 40px rgba(0, 0, 0, 0);
+	}
+	100% {
+		-webkit-box-shadow: 0 15px 40px rgba(0, 0, 0, 0.2);
+		-moz-box-shadow: 0 15px 40px rgba(0, 0, 0, 0.2);
+		-o-box-shadow: 0 15px 40px rgba(0, 0, 0, 0.2);
+		box-shadow: 0 15px 40px rgba(0, 0, 0, 0.2);
+	}
+}
+
+@-o-keyframes ShowShadow {
+	0% {
+		-webkit-box-shadow: 0 15px 40px rgba(0, 0, 0, 0);
+		-moz-box-shadow: 0 15px 40px rgba(0, 0, 0, 0);
+		-o-box-shadow: 0 15px 40px rgba(0, 0, 0, 0);
+		box-shadow: 0 15px 40px rgba(0, 0, 0, 0);
+	}
+	100% {
+		-webkit-box-shadow: 0 15px 40px rgba(0, 0, 0, 0.2);
+		-moz-box-shadow: 0 15px 40px rgba(0, 0, 0, 0.2);
+		-o-box-shadow: 0 15px 40px rgba(0, 0, 0, 0.2);
+		box-shadow: 0 15px 40px rgba(0, 0, 0, 0.2);
+	}
+}
+
+@keyframes ShowShadow {
+	0% {
+		-webkit-box-shadow: 0 15px 40px rgba(0, 0, 0, 0);
+		-moz-box-shadow: 0 15px 40px rgba(0, 0, 0, 0);
+		-o-box-shadow: 0 15px 40px rgba(0, 0, 0, 0);
+		box-shadow: 0 15px 40px rgba(0, 0, 0, 0);
+	}
+	100% {
+		-webkit-box-shadow: 0 15px 40px rgba(0, 0, 0, 0.2);
+		-moz-box-shadow: 0 15px 40px rgba(0, 0, 0, 0.2);
+		-o-box-shadow: 0 15px 40px rgba(0, 0, 0, 0.2);
+		box-shadow: 0 15px 40px rgba(0, 0, 0, 0.2);
+	}
+}
+
+.remove_shadow{
+	-webkit-animation: ShowShadow .1s reverse!important;
+	-moz-animation: ShowShadow .1s reverse!important;
+	-o-animation: ShowShadow .1s reverse!important;
+    animation: ShowShadow .1s reverse!important;
+}
+
+.fade_login_form{
+	opacity: 1!important;
+	-webkit-animation: MoveToCenter .5s forwards, HideFromCenter .3s forwards .6s !important;
+	-moz-animation: MoveToCenter .5s forwards, HideFromCenter .3s forwards .6s !important;
+	-o-animation: MoveToCenter .5s forwards, HideFromCenter .3s forwards .6s !important;
+	animation: MoveToCenter .5s forwards, HideFromCenter .3s forwards .6s !important;
+}
+
+@-webkit-keyframes HideFromCenter {
+	0% {
+		opacity: 1;
+	}
+	100% {
+		opacity: 0;
+	}
+}
+
+@-moz-keyframes HideFromCenter {
+	0% {
+		opacity: 1;
+	}
+	100% {
+		opacity: 0;
+	}
+}
+
+@-o-keyframes HideFromCenter {
+	0% {
+		opacity: 1;
+	}
+	100% {
+		opacity: 0;
+	}
+}
+
+@keyframes HideFromCenter {
+	0% {
+		opacity: 1;
+	}
+	100% {
+		opacity: 0;
+	}
+}
+
+@-webkit-keyframes MoveToCenter {
+	0% {
+		position: absolute;
+		right: 0;
+		-o-transform: translate(0%, 0%);
+		-moz-transform: translate(0%, 0%);
+		-webkit-transform: translate(0%, 0%);
+		transform: translate(0%, 0%);
+	}
+	100% {
+		position: absolute;
+		right: 50%;
+		-o-transform: translate(50%, 0%);
+		-moz-transform: translate(50%, 0%);
+		-webkit-transform: translate(50%, 0%);
+		transform: translate(50%, 0%);
+	}
+}
+@-moz-keyframes MoveToCenter {
+	0% {
+		position: absolute;
+		right: 0;
+		-o-transform: translate(0%, 0%);
+		-moz-transform: translate(0%, 0%);
+		-webkit-transform: translate(0%, 0%);
+		transform: translate(0%, 0%);
+	}
+	100% {
+		position: absolute;
+		right: 50%;
+		-o-transform: translate(50%, 0%);
+		-moz-transform: translate(50%, 0%);
+		-webkit-transform: translate(50%, 0%);
+		transform: translate(50%, 0%);
+	}
+}
+
+@-o-keyframes MoveToCenter {
+	0% {
+		position: absolute;
+		right: 0;
+		-o-transform: translate(0%, 0%);
+		-moz-transform: translate(0%, 0%);
+		-webkit-transform: translate(0%, 0%);
+		transform: translate(0%, 0%);
+	}
+	100% {
+		position: absolute;
+		right: 50%;
+		-o-transform: translate(50%, 0%);
+		-moz-transform: translate(50%, 0%);
+		-webkit-transform: translate(50%, 0%);
+		transform: translate(50%, 0%);
+	}
+}
+
+@keyframes MoveToCenter {
+	0% {
+		position: absolute;
+		right: 0;
+		-o-transform: translate(0%, 0%);
+		-moz-transform: translate(0%, 0%);
+		-webkit-transform: translate(0%, 0%);
+		transform: translate(0%, 0%);
+	}
+	100% {
+		position: absolute;
+		right: 50%;
+		-o-transform: translate(50%, 0%);
+		-moz-transform: translate(50%, 0%);
+		-webkit-transform: translate(50%, 0%);
+		transform: translate(50%, 0%);
+	}
 }
 
 .login_side{
 	background-color: #fff;
 	padding-top: 70px;
+	opacity: 0;
+	-webkit-animation: ShowFromNone .5s forwards 1s, StartFromCenter .5s forwards 1.5s;
+	-moz-animation: ShowFromNone .5s forwards 1s, StartFromCenter .5s forwards 1.5s;
+	-o-animation: ShowFromNone .5s forwards 1s, StartFromCenter .5s forwards 1.5s;
+	animation: ShowFromNone .5s forwards 1s, StartFromCenter .5s forwards 1.5s;
+}
+
+@-webkit-keyframes ShowFromNone{
+	0% {
+		opacity: 0;
+		position: absolute;
+		top: 50%;
+		right: 50%;
+		-o-transform: translate(50%, -50%);
+		-moz-transform: translate(50%, -50%);
+		-webkit-transform: translate(50%, -50%);
+		transform: translate(50%, -50%);
+	}
+	100% {
+		opacity: 1;
+		position: absolute;
+		top: 50%;
+		right: 50%;
+		-o-transform: translate(50%, -50%);
+		-moz-transform: translate(50%, -50%);
+		-webkit-transform: translate(50%, -50%);
+		transform: translate(50%, -50%);
+	}
+}
+
+@-moz-keyframes ShowFromNone{
+	0% {
+		opacity: 0;
+		position: absolute;
+		top: 50%;
+		right: 50%;
+		-o-transform: translate(50%, -50%);
+		-moz-transform: translate(50%, -50%);
+		-webkit-transform: translate(50%, -50%);
+		transform: translate(50%, -50%);
+	}
+	100% {
+		opacity: 1;
+		position: absolute;
+		top: 50%;
+		right: 50%;
+		-o-transform: translate(50%, -50%);
+		-moz-transform: translate(50%, -50%);
+		-webkit-transform: translate(50%, -50%);
+		transform: translate(50%, -50%);
+	}
+}
+
+@-o-keyframes ShowFromNone{
+	0% {
+		opacity: 0;
+		position: absolute;
+		top: 50%;
+		right: 50%;
+		-o-transform: translate(50%, -50%);
+		-moz-transform: translate(50%, -50%);
+		-webkit-transform: translate(50%, -50%);
+		transform: translate(50%, -50%);
+	}
+	100% {
+		opacity: 1;
+		position: absolute;
+		top: 50%;
+		right: 50%;
+		-o-transform: translate(50%, -50%);
+		-moz-transform: translate(50%, -50%);
+		-webkit-transform: translate(50%, -50%);
+		transform: translate(50%, -50%);
+	}
+}
+
+@keyframes ShowFromNone{
+	0% {
+		opacity: 0;
+		position: absolute;
+		top: 50%;
+		right: 50%;
+		-o-transform: translate(50%, -50%);
+		-moz-transform: translate(50%, -50%);
+		-webkit-transform: translate(50%, -50%);
+		transform: translate(50%, -50%);
+	}
+	100% {
+		opacity: 1;
+		position: absolute;
+		top: 50%;
+		right: 50%;
+		-o-transform: translate(50%, -50%);
+		-moz-transform: translate(50%, -50%);
+		-webkit-transform: translate(50%, -50%);
+		transform: translate(50%, -50%);
+	}
+}
+
+@-webkit-keyframes StartFromCenter{
+	0% {
+		opacity: 1;
+		position: absolute;
+		top: 50%;
+		right: 50%;
+		-o-transform: translate(50%, -50%);
+		-moz-transform: translate(50%, -50%);
+		-webkit-transform: translate(50%, -50%);
+		transform: translate(50%, -50%);
+	}
+	100% {
+		opacity: 1;
+		position: absolute;
+		top: 0;
+		right: 0%;
+		-o-transform: translate(0%, 0%);
+		-moz-transform: translate(0%, 0%);
+		-webkit-transform: translate(0%, 0%);
+		transform: translate(0%, 0%);
+	}
+}
+
+@-moz-keyframes StartFromCenter{
+	0% {
+		opacity: 1;
+		position: absolute;
+		top: 50%;
+		right: 50%;
+		-o-transform: translate(50%, -50%);
+		-moz-transform: translate(50%, -50%);
+		-webkit-transform: translate(50%, -50%);
+		transform: translate(50%, -50%);
+	}
+	100% {
+		opacity: 1;
+		position: absolute;
+		top: 0;
+		right: 0%;
+		-o-transform: translate(0%, 0%);
+		-moz-transform: translate(0%, 0%);
+		-webkit-transform: translate(0%, 0%);
+		transform: translate(0%, 0%);
+	}
+}
+
+@-o-keyframes StartFromCenter{
+	0% {
+		opacity: 1;
+		position: absolute;
+		top: 50%;
+		right: 50%;
+		-o-transform: translate(50%, -50%);
+		-moz-transform: translate(50%, -50%);
+		-webkit-transform: translate(50%, -50%);
+		transform: translate(50%, -50%);
+	}
+	100% {
+		opacity: 1;
+		position: absolute;
+		top: 0;
+		right: 0%;
+		-o-transform: translate(0%, 0%);
+		-moz-transform: translate(0%, 0%);
+		-webkit-transform: translate(0%, 0%);
+		transform: translate(0%, 0%);
+	}
+}
+
+@keyframes StartFromCenter{
+	0% {
+		opacity: 1;
+		position: absolute;
+		top: 50%;
+		right: 50%;
+		-o-transform: translate(50%, -50%);
+		-moz-transform: translate(50%, -50%);
+		-webkit-transform: translate(50%, -50%);
+		transform: translate(50%, -50%);
+	}
+	100% {
+		opacity: 1;
+		position: absolute;
+		top: 0;
+		right: 0%;
+		-o-transform: translate(0%, 0%);
+		-moz-transform: translate(0%, 0%);
+		-webkit-transform: translate(0%, 0%);
+		transform: translate(0%, 0%);
+	}
 }
 
 .login_bg{
@@ -90,6 +502,124 @@ export default {
 	background-repeat: no-repeat;
 	background-position: center;
 	background-size: cover;
+	opacity: 0;
+	-webkit-animation: StartFromCenterBack .5s forwards 1.6s;
+	-moz-animation: StartFromCenterBack .5s forwards 1.6s;
+	-o-animation: StartFromCenterBack .5s forwards 1.6s;
+	animation: StartFromCenterBack .5s forwards 1.6s;
+}
+
+@-webkit-keyframes StartFromCenterBack{
+	0% {
+		position: absolute;
+		top:50%;
+		left: 50%;
+		-o-transform: translate(-50%, -50%);
+		-moz-transform: translate(-50%, -50%);
+		-webkit-transform: translate(-50%, -50%);
+		transform: translate(-50%, -50%);
+	}
+	100% {
+		opacity: 1;
+		position: absolute;
+		top: 0;
+		left: 0;
+		-o-transform: translate(0%, 0%);
+		-moz-transform: translate(0%, 0%);
+		-webkit-transform: translate(0%, 0%);
+		transform: translate(0%, 0%);
+	}
+}
+
+@-moz-keyframes StartFromCenterBack{
+	0% {
+		position: absolute;
+		top:50%;
+		left: 50%;
+		-o-transform: translate(-50%, -50%);
+		-moz-transform: translate(-50%, -50%);
+		-webkit-transform: translate(-50%, -50%);
+		transform: translate(-50%, -50%);
+	}
+	100% {
+		opacity: 1;
+		position: absolute;
+		top: 0;
+		left: 0;
+		-o-transform: translate(0%, 0%);
+		-moz-transform: translate(0%, 0%);
+		-webkit-transform: translate(0%, 0%);
+		transform: translate(0%, 0%);
+	}
+}
+
+@-o-keyframes StartFromCenterBack{
+	0% {
+		position: absolute;
+		top:50%;
+		left: 50%;
+		-o-transform: translate(-50%, -50%);
+		-moz-transform: translate(-50%, -50%);
+		-webkit-transform: translate(-50%, -50%);
+		transform: translate(-50%, -50%);
+	}
+	100% {
+		opacity: 1;
+		position: absolute;
+		top: 0;
+		left: 0;
+		-o-transform: translate(0%, 0%);
+		-moz-transform: translate(0%, 0%);
+		-webkit-transform: translate(0%, 0%);
+		transform: translate(0%, 0%);
+	}
+}
+
+@keyframes StartFromCenterBack{
+	0% {
+		position: absolute;
+		top:50%;
+		left: 50%;
+		-o-transform: translate(-50%, -50%);
+		-moz-transform: translate(-50%, -50%);
+		-webkit-transform: translate(-50%, -50%);
+		transform: translate(-50%, -50%);
+	}
+	100% {
+		opacity: 1;
+		position: absolute;
+		top: 0;
+		left: 0;
+		-o-transform: translate(0%, 0%);
+		-moz-transform: translate(0%, 0%);
+		-webkit-transform: translate(0%, 0%);
+		transform: translate(0%, 0%);
+	}
+}
+
+.fade_login_bg{
+	opacity: 1;
+	animation: HideFromLeft .3s forwards .2s;
+}
+
+@keyframes HideFromLeft {
+	0% {
+		opacity: 1;
+		position: absolute;
+		top: 0;
+		left: 0;
+		-webkit-transform: translate(0%, 0%);
+		transform: translate(0%, 0%);
+	}
+	100% {
+		opacity: 0;
+		position: absolute;
+		top: 50%;
+		left: 50%;
+		width: 30%;
+		-webkit-transform: translate(-50%, -50%);
+		transform: translate(-50%, -50%);
+	}
 }
 
 .login_logo{
@@ -123,6 +653,7 @@ export default {
 	background-repeat: no-repeat;
 	background-position: right center;
 	background-size: 25px;
+	-moz-box-sizing: initial;
 }
 .login_form .form-control:nth-child(1){
 	border-bottom: 1px solid #cccccc;
@@ -197,23 +728,6 @@ export default {
 		opacity: 0;
 	}
 }
-/*.center_login_side{
-	position: absolute;
-	left: 50%;
-	-webkit-transform: translate(-50%, 0%);
-	-moz-transform: translate(-50%, 0%);
-	-o-transform: translate(-50%, 0%);
-    transform: translate(-50%, 0%);
-	-webkit-transition: all .4s ease;
-    -moz-transition: all .4s ease;
-    -o-transition: all .4s ease;
-    -ms-transition: all .4s ease;
-    transition: all .4s ease;
-	-webkit-transition-delay: .6s;
-	-moz-transition-delay: .6s;
-	-o-transition-delay: .6s;
-	transition-delay: .6s;
-}*/
 .loader{
     position: absolute;
     top: 0;
