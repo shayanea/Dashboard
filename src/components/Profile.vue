@@ -28,6 +28,12 @@ export default {
     methods : {
         LogOut : function (){
             this.$router.push({path: '/login'});
+            this.$http.get('http://panel.hex.team/api/logout')
+            .then(function(response) {
+                console.log(response);   
+            }, function(response) {
+                console.log(response);
+            });
         },
         handleClickOutside : function(e) {
             this.ShowLogOut = false;

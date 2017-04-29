@@ -19,7 +19,7 @@
                     <div class="form-group col-md-12 col-sm-12 col-xs-12">
                         <label class="col-md-3 col-sm-3 col-xs-12">توصیحات</label> 
                         <quill-editor class="col-md-9 col-sm-9 col-xs-12" v-model="about.description" :options="editorOption" 
-                        @change="onEditorChange($event)" @:paste="paste($event)" @:onpaste="paste($event)">
+                        @change="onEditorChange($event)" @ready="onEditorReady($event)">
                         </quill-editor>
                     </div>
                     <div class="form-group col-md-12 col-sm-12 col-xs-12">
@@ -67,11 +67,14 @@ export default {
         'profile': Profile
     },
     methods :{
-        onEditorChange({ editor, html, text }) {
-            // return this.about.description = editor.text;
+        onEditorReady(editor) {
+            editor.format('align', 'right');
         },
-        paste(editor){
-            console.log(editor)
+        onEditorChange(editor){
+            console.log(editor);
+            // editor.clipboard.addMatcher (Node.ELEMENT_NODE, function (node) {
+            //     console.log(node);
+            // });
         }
     }
 }

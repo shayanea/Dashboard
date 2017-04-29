@@ -12,18 +12,18 @@
 					</div>
 					<div class="row">
 						<div class="col-md-8 col-sm-7 col-xs-12 login_bg" v-bind:class="{ fade_login_bg : Success }">
-							<error :status="alert.status" :text="alert.message"></error>	
+							<error :status="alert.status" :text="alert.message"></error>
 						</div>
 						<div class="col-md-4 col-sm-5 col-xs-12 login_side" v-bind:class="{ fade_login_form : Success }">
-							<img src="../assets/login_logo.png" class="login_logo" />
+							<img src="../assets/login_logo.png" class="login_logo"/>
 							<h2>سیستم مدیریت وب سایت</h2>
 							<form class="login_form" @submit.prevent="Login">
-								<input type="text" class="form-control" v-on:focus="RemovePlaceholder" v-on:blur="AddPlaceholder"
-								placeholder="نـام کاربـــری" data-placeholder="نـام کاربـــری" v-model="model.username" 
-								minlength="2" maxlength="50" />
-								<input type="password" class="form-control" v-on:focus="RemovePlaceholder"  v-on:blur="AddPlaceholder"
+								<input type="text" class="form-control" v-on:focus="RemovePlaceholder" v-on:blur="AddPlaceholder" 
+								placeholder="نـام کاربـــری" data-placeholder="نـام کاربـــری" v-model="model.username" minlength="2" maxlength="50"
+								name="username" v-validate="'required|min:4'" :class="{'input': true, 'error_input': errors.has('username')}" />
+								<input type="password" class="form-control" v-on:focus="RemovePlaceholder" v-on:blur="AddPlaceholder" 
 								placeholder="رمـز ورود به سامـانه" data-placeholder="رمـز ورود به سامـانه" v-model="model.password" 
-								minlength="2" maxlength="50" />
+								name="password" v-validate="'required|min:4'" :class="{'input': true, 'error_input': errors.has('password')}" minlength="2" maxlength="50" />
 								<button type="submit" class="btn btn-block">ورود بـه سامــانه</button>
 							</form>
 						</div>
@@ -36,18 +36,20 @@
 
 <script>
 import Error from './LoginError'
+import Stage from '../Stage'
 
 export default {
 	name: 'login',
 	data() {
 		return {
 			ShowLoader: false,
-			Success : false,
-			model:{
+			Success: false,
+			Submit: false,
+			model: {
 				username: '',
 				password: ''
 			},
-			alert:{
+			alert: {
 				status: false,
 				message: ''
 			}
@@ -56,42 +58,46 @@ export default {
 	created() {
 		document.title = "صفحه ورود کاربران";
 	},
-	components:{
-		'error' : Error
+	components: {
+		'error': Error
 	},
-	methods:{
-		RemovePlaceholder : function(e){
+	methods: {
+		RemovePlaceholder: function (e) {
 			e.target.placeholder = '';
 		},
-		AddPlaceholder : function(e){
+		AddPlaceholder: function (e) {
 			e.target.placeholder = e.target.attributes['data-placeholder'].value;
 		},
-		Login : function(e){
+		Login: function (e) {
+			this.$validator.validateAll().then(result => {
+                if (result) {
+                    this.alert.status = false;
+					this.ShowLoader = true;
+					this.$http.post('http://panel.hex.team/api', {
+						username: this.model.username,
+						password: this.model.password,
+						api:'login'
+					}).then(function(response) {
+						this.ShowLoader = false;
+						if (response.status == 200) {
+							this.Success = true;
+							localStorage.setItem('Authorization', response.body.token);
+							var self = this;
+							setTimeout(function () {
+								self.$router.push({ path: '/about' });
+							}, 1000);
+						}
+					}, function(response) {
+						this.ShowLoader = false;
+						this.alert.status = true;
+						if (response.status == 404 || response.status == 400) {
+							this.alert.message = "رمز عبور / نام کاربری شما اشتباه است."
+						}
+					});
+                }
+            });
+			// Stage[0].config.api + 'api.php'
 			
-			this.alert.status = false;
-			this.ShowLoader = true;
-			this.$http.post('https://invoice-management.herokuapp.com/api/auth/login',{
-				email: this.model.username,
-				password: this.model.password
-			}).then(response => {
-				this.ShowLoader = false;
-				if(response.status == 200){
-					this.Success = true;
-					localStorage.setItem('Authorization',response.body.Token);
-					var self = this;
-					setTimeout(function(){
-						self.$router.push({ path: '/about' });
-					},1000);
-				}
-			}, response => {
-				this.ShowLoader = false;
-				this.alert.status = true;
-				if(response.status == 404){
-					this.alert.message = "کاربر با این مشخصات موجود نیست."
-				}else if(response.status == 400){
-					this.alert.message = "رمز عبور شما اشتباه است.";
-				}
-			});
 		}
 	}
 }
@@ -105,12 +111,12 @@ export default {
 
 #Login .shadow_box {
 	position: absolute;
-    left: 50%;
-    top: 50%;
-    -o-transform: translate(-50%, -50%);
-    -moz-transform: translate(-50%, -50%);
-    -webkit-transform: translate(-50%, -50%);
-    transform: translate(-50%, -50%);
+	left: 50%;
+	top: 50%;
+	-o-transform: translate(-50%, -50%);
+	-moz-transform: translate(-50%, -50%);
+	-webkit-transform: translate(-50%, -50%);
+	transform: translate(-50%, -50%);
 	overflow: hidden;
 	-webkit-animation: ShowShadow .1s forwards 2s;
 	-moz-animation: ShowShadow .1s forwards 2s;
@@ -132,6 +138,7 @@ export default {
 		box-shadow: 0 15px 40px rgba(0, 0, 0, 0.2);
 	}
 }
+
 @-moz-keyframes ShowShadow {
 	0% {
 		-webkit-box-shadow: 0 15px 40px rgba(0, 0, 0, 0);
@@ -177,14 +184,14 @@ export default {
 	}
 }
 
-.remove_shadow{
+.remove_shadow {
 	-webkit-animation: ShowShadow .1s reverse!important;
 	-moz-animation: ShowShadow .1s reverse!important;
 	-o-animation: ShowShadow .1s reverse!important;
-    animation: ShowShadow .1s reverse!important;
+	animation: ShowShadow .1s reverse!important;
 }
 
-.fade_login_form{
+.fade_login_form {
 	opacity: 1!important;
 	-webkit-animation: MoveToCenter .5s forwards, HideFromCenter .3s forwards .6s !important;
 	-moz-animation: MoveToCenter .5s forwards, HideFromCenter .3s forwards .6s !important;
@@ -246,6 +253,7 @@ export default {
 		transform: translate(50%, 0%);
 	}
 }
+
 @-moz-keyframes MoveToCenter {
 	0% {
 		position: absolute;
@@ -303,7 +311,7 @@ export default {
 	}
 }
 
-.login_side{
+.login_side {
 	background-color: #fff;
 	padding-top: 70px;
 	opacity: 0;
@@ -313,7 +321,7 @@ export default {
 	animation: ShowFromNone .5s forwards 1s, StartFromCenter .5s forwards 1.5s;
 }
 
-@-webkit-keyframes ShowFromNone{
+@-webkit-keyframes ShowFromNone {
 	0% {
 		opacity: 0;
 		position: absolute;
@@ -336,7 +344,7 @@ export default {
 	}
 }
 
-@-moz-keyframes ShowFromNone{
+@-moz-keyframes ShowFromNone {
 	0% {
 		opacity: 0;
 		position: absolute;
@@ -359,7 +367,7 @@ export default {
 	}
 }
 
-@-o-keyframes ShowFromNone{
+@-o-keyframes ShowFromNone {
 	0% {
 		opacity: 0;
 		position: absolute;
@@ -382,7 +390,7 @@ export default {
 	}
 }
 
-@keyframes ShowFromNone{
+@keyframes ShowFromNone {
 	0% {
 		opacity: 0;
 		position: absolute;
@@ -405,7 +413,7 @@ export default {
 	}
 }
 
-@-webkit-keyframes StartFromCenter{
+@-webkit-keyframes StartFromCenter {
 	0% {
 		opacity: 1;
 		position: absolute;
@@ -428,7 +436,7 @@ export default {
 	}
 }
 
-@-moz-keyframes StartFromCenter{
+@-moz-keyframes StartFromCenter {
 	0% {
 		opacity: 1;
 		position: absolute;
@@ -451,7 +459,7 @@ export default {
 	}
 }
 
-@-o-keyframes StartFromCenter{
+@-o-keyframes StartFromCenter {
 	0% {
 		opacity: 1;
 		position: absolute;
@@ -474,7 +482,7 @@ export default {
 	}
 }
 
-@keyframes StartFromCenter{
+@keyframes StartFromCenter {
 	0% {
 		opacity: 1;
 		position: absolute;
@@ -497,7 +505,7 @@ export default {
 	}
 }
 
-.login_bg{
+.login_bg {
 	background-image: url('../assets/bg.jpg');
 	background-repeat: no-repeat;
 	background-position: center;
@@ -509,10 +517,10 @@ export default {
 	animation: StartFromCenterBack .5s forwards 1.6s;
 }
 
-@-webkit-keyframes StartFromCenterBack{
+@-webkit-keyframes StartFromCenterBack {
 	0% {
 		position: absolute;
-		top:50%;
+		top: 50%;
 		left: 50%;
 		-o-transform: translate(-50%, -50%);
 		-moz-transform: translate(-50%, -50%);
@@ -531,10 +539,10 @@ export default {
 	}
 }
 
-@-moz-keyframes StartFromCenterBack{
+@-moz-keyframes StartFromCenterBack {
 	0% {
 		position: absolute;
-		top:50%;
+		top: 50%;
 		left: 50%;
 		-o-transform: translate(-50%, -50%);
 		-moz-transform: translate(-50%, -50%);
@@ -553,10 +561,10 @@ export default {
 	}
 }
 
-@-o-keyframes StartFromCenterBack{
+@-o-keyframes StartFromCenterBack {
 	0% {
 		position: absolute;
-		top:50%;
+		top: 50%;
 		left: 50%;
 		-o-transform: translate(-50%, -50%);
 		-moz-transform: translate(-50%, -50%);
@@ -575,10 +583,10 @@ export default {
 	}
 }
 
-@keyframes StartFromCenterBack{
+@keyframes StartFromCenterBack {
 	0% {
 		position: absolute;
-		top:50%;
+		top: 50%;
 		left: 50%;
 		-o-transform: translate(-50%, -50%);
 		-moz-transform: translate(-50%, -50%);
@@ -597,50 +605,49 @@ export default {
 	}
 }
 
-.fade_login_bg{
+.fade_login_bg {
 	opacity: 1;
+	position: absolute;
+	left: 0;
 	animation: HideFromLeft .3s forwards .2s;
 }
 
 @keyframes HideFromLeft {
 	0% {
 		opacity: 1;
-		position: absolute;
-		top: 0;
-		left: 0;
 		-webkit-transform: translate(0%, 0%);
 		transform: translate(0%, 0%);
+		
 	}
 	100% {
 		opacity: 0;
-		position: absolute;
-		top: 50%;
-		left: 50%;
 		width: 30%;
-		-webkit-transform: translate(-50%, -50%);
-		transform: translate(-50%, -50%);
+		-webkit-transform: translate(50%, 0%);
+		transform: translate(50%, 0%);
 	}
 }
 
-.login_logo{
+.login_logo {
 	width: 130px;
 	height: auto;
 	display: block;
 	margin: 0 auto;
 }
 
-.login_side h2{
+.login_side h2 {
 	font-size: 1.1em;
 	text-align: center;
 	color: #999;
 }
-.login_form{
+
+.login_form {
 	width: 180px;
 	display: block;
 	margin: 70px auto;
 }
-.login_form .form-control{
-	border:0px;
+
+.login_form .form-control {
+	border: 0px;
 	direction: rtl;
 	padding: 30px 0;
 	padding-right: 40px;
@@ -655,14 +662,17 @@ export default {
 	background-size: 25px;
 	-moz-box-sizing: initial;
 }
-.login_form .form-control:nth-child(1){
+
+.login_form .form-control:nth-child(1) {
 	border-bottom: 1px solid #cccccc;
 	background-image: url('../assets/user.svg');
 }
-.login_form .form-control:nth-child(2){
+
+.login_form .form-control:nth-child(2) {
 	background-image: url('../assets/pass.svg');
 }
-.login_form .btn{
+
+.login_form .btn {
 	background-color: #E1E1E1;
 	color: #8E8E8E;
 	font-size: 14px;
@@ -673,12 +683,14 @@ export default {
 	outline: none;
 	box-shadow: none;
 }
+
 .login_form .btn:hover,
 .login_form .btn:focus,
-.login_form .btn:active{
+.login_form .btn:active {
 	background-color: #cecece;
 }
-.login_form .btn:after{
+
+.login_form .btn:after {
 	content: '';
 	position: absolute;
 	left: 20px;
@@ -690,61 +702,71 @@ export default {
 	background-position: center;
 	background-size: 20px;
 }
-.hide_login_bg{
+
+.hide_login_bg {
 	-webkit-animation: HideBg .5s forwards;
 	-moz-animation: HideBg .5s forwards;
 	-o-animation: HideBg .5s forwards;
 	animation: HideBg .5s forwards;
 }
+
 @-webkit-keyframes HideBg {
-	0%{
+	0% {
 		opacity: 1;
 	}
-	100%{
+	100% {
 		opacity: 0;
 	}
 }
+
 @-moz-keyframes HideBg {
-	0%{
+	0% {
 		opacity: 1;
 	}
-	100%{
+	100% {
 		opacity: 0;
 	}
 }
+
 @-o-keyframes HideBg {
-	0%{
+	0% {
 		opacity: 1;
 	}
-	100%{
+	100% {
 		opacity: 0;
 	}
 }
+
 @keyframes HideBg {
-	0%{
+	0% {
 		opacity: 1;
 	}
-	100%{
+	100% {
 		opacity: 0;
 	}
 }
-.loader{
-    position: absolute;
-    top: 0;
+
+.loader {
+	position: absolute;
+	top: 0;
 	right: 0;
 	left: 0;
 	bottom: 0;
-    text-align: center;
-    background-color: rgba(0, 0, 0, 0.3);
-    z-index: 999;
+	text-align: center;
+	background-color: rgba(0, 0, 0, 0.3);
+	z-index: 999;
 }
-.loader svg{
-    position: absolute;
-    left: 50%;
-    top: 50%;
-    height: 50px;
-    width: 50px;
-    -webkit-transform: translate(-50%, -50%);
-    transform: translate(-50%, -50%);
+
+.loader svg {
+	position: absolute;
+	left: 50%;
+	top: 50%;
+	height: 50px;
+	width: 50px;
+	-webkit-transform: translate(-50%, -50%);
+	transform: translate(-50%, -50%);
+}
+.error_input{
+	border-bottom:1px solid #D91E18!important;
 }
 </style>

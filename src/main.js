@@ -3,19 +3,22 @@
 import Vue from 'vue'
 import App from './App'
 import router from './router'
-import Http from 'vue-resource'
 import VueQuillEditor from 'vue-quill-editor'
+import VeeValidate from 'vee-validate'
+import HttpConfig from './helper/http'
 
 Vue.config.productionTip = false
 
-Vue.use(Http)
-
 Vue.use(VueQuillEditor)
+
+Vue.use(VeeValidate)
 
 /* eslint-disable no-new */
 new Vue({
-  el: '#app',
-  router,
-  template: '<App/>',
-  components: { App }
+	el: '#app',
+	router,
+	template: '<App/>',
+	components: {
+		App
+	}
 })
