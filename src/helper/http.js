@@ -13,11 +13,10 @@ Vue.http.options.emulateJSON = config['emulateJSON'];
 
 Vue.http.options.headers = {
 	'Content-Type': config['Content-Type'],
-    'Auth': 'asdasdasdasasdasd'
+    // 'Auth': 'asdasdasdasasdasd'
 };
 
 Vue.http.interceptors.push(function (request, next) {
-    console.log(request);
 	// continue to next interceptor
 	next(function (response) {
 		if(response.status == 401){

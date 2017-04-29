@@ -24,6 +24,34 @@
                     </div>
                     <div class="form-group col-md-12 col-sm-12 col-xs-12">
                         <label class="col-md-3 col-sm-3 col-xs-12">تصویر اصلی</label>
+                        <file-base64
+                            :multiple="false"
+                            :done="GetHeader">
+                        </file-base64>
+                        <img :src="about.header" class="img-responsive thumbnail"/>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="form-group col-md-12 col-sm-12 col-xs-12" v-for="(item, index) in about.teams">
+                        <label class="col-md-3 col-sm-3 col-xs-12">{{index+1}} اعضای تیم</label>
+                        <file-base64
+                            :multiple="false"
+                            :done="GetTeam"
+                            :index="index">
+                        </file-base64>
+                        <img :src="item.image" class="img-responsive thumbnail"/>
+                        <div class="form-group col-md-3 col-sm-3 col-xs-12">
+                            <input class="form-control" name="name" v-model="item.name" maxlength="58" placeholder="نام" />
+                        </div>
+                        <div class="form-group col-md-3 col-sm-3 col-xs-12"> 
+                            <input class="form-control" name="position" v-model="item.position" maxlength="58" placeholder="سمت" /> 
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-3 col-sm-3 col-xs-12"></div>
+                    <div class="col-md-9 col-sm-9 col-xs-12" style="padding-right:0px;">
+                        <button type="submit" class="btn save">ذخیــره</button>
                     </div>
                 </div>
             </form>
@@ -35,6 +63,7 @@
 import Menu from './Menu'
 import Logo from './Logo'
 import Profile from './Profile'
+import fileBase64 from './uplaoder'
 
 export default {
     name:'about',
@@ -42,7 +71,21 @@ export default {
         return {
             about:{
                 title : '',
-                description : ''
+                description : '',
+                header:'',
+                teams:[
+                    {
+                        image:'',
+                        name:'Eng.Mehdi Mohammadi',
+                        position:'CEO'
+                    },
+                    {
+                        image:'',
+                        name:'Eng.Mehdi Mohammadi',
+                        position:'CEO'
+                    }
+                ],
+                files:[]
             },
             editorOption: {
                 placeholder: 'توضیحات ...',
@@ -64,14 +107,27 @@ export default {
     components:{
         'navigation': Menu,
         'logo': Logo,
-        'profile': Profile
+        'profile': Profile,
+        fileBase64 
+    },
+    created(){
+        return document.title = "تدوین صفحه درباره ما";
     },
     methods :{
+        GetHeader(file){
+            this.about.header = file.base64;
+            this.about.files.push({'src':file.base64});
+            console.log(this.about.files);
+        },
+        GetTeam(file){
+            console.log(file);
+            this.about.teams[file.index].image = file.base64;
+        },
         onEditorReady(editor) {
             editor.format('align', 'right');
         },
         onEditorChange(editor){
-            console.log(editor);
+            // console.log(editor);
             // editor.clipboard.addMatcher (Node.ELEMENT_NODE, function (node) {
             //     console.log(node);
             // });
@@ -151,5 +207,28 @@ export default {
 .ql-snow .ql-picker:not(.ql-color-picker):not(.ql-icon-picker) svg{
     left: 0;
     right: auto!important;
+}
+.about .thumbnail{
+    border-radius: 0;
+    border:0;
+    height: auto;
+    max-height: 150px;
+    padding: 0;
+    background: transparent;
+    float: right;
+    margin-right: 20px;
+}
+.about .save{
+    background: #363636;
+    color: #fff;
+    box-shadow: none;
+    outline: none;
+    padding: 5px 40px;
+    font-size: 15px;
+    float: right;
+    margin-bottom: 50px;
+}
+.about .save:hover{
+    opacity: .7;
 }
 </style>

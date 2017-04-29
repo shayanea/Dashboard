@@ -28,7 +28,12 @@ export default {
     methods : {
         LogOut : function (){
             this.$router.push({path: '/login'});
-            this.$http.get('http://panel.hex.team/api/logout')
+            localStorage.removeItem('Authorization');
+            this.$http.get('http://panel.hex.team/api/logout',{
+                headers:{
+                    'Authorization':localStorage.getItem('Authorization')
+                }
+            })
             .then(function(response) {
                 console.log(response);   
             }, function(response) {
