@@ -14,7 +14,7 @@
                 </div>
                 <ul class="nav_list" v-bind:class="{ show: ShowMenu }">
                     <li v-for="item in Item" v-on:click="ShowDropDown(item)">
-                        <a href="#">
+                        <a :href="item.url">
                             {{item.name}}
                         </a>
                         <svg v-if="item.child.length > 0" class="arrow_dropdown" v-bind:class="{ rotate : DropDown}" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" x="0px" y="0px" width="451.847px" height="451.847px" viewBox="0 0 451.847 451.847" style="enable-background:new 0 0 451.847 451.847;" xml:space="preserve">
@@ -23,7 +23,7 @@
                         </svg>
                         <ul class="child_menu" v-if="item.child.length > 0" v-bind:class="{ show_dropdown : DropDown}">
                             <li v-for="child in item.child">
-                                <a href="#">
+                                <a :href="child.url">
                                     {{child.name}}
                                 </a>
                             </li>
@@ -48,42 +48,43 @@ export default {
                 {
                     name: 'درباره‌ مـا',
                     sort: 0,
+                    url:'About',
                     child:[]
                 },
                 {
                     name: 'نمونه کــار‌هـا',
                     sort: 1,
+                    url:'#',
                     child:[
                         {
                             name: 'لیست نمونه کار‌ها',
+                            url:'Project',
                             sort: 0
                         },
                         {
                             name: 'اضافه کردن نمونه کار',
+                            url:'AddProject',
                             sort: 1
                         }
                     ]
                 },
                 {
-                    name: 'وبلاگ و اخبـار',
-                    sort: 2,
-                    child:[]
-                },
-                {
                     name: 'ارتباط بـا مـا',
                     sort: 3,
+                    url:'Contact',
                     child:[]
                 },
                 {
                     name: 'تنظیمات',
+                    url:'Setting',
                     sort: 4,
                     child:[]
                 },
-                {
-                    name: 'آمــار بازدید',
-                    sort: 5,
-                    child:[]
-                }
+                // {
+                //     name: 'آمــار بازدید',
+                //     sort: 5,
+                //     child:[]
+                // }
             ]
         }
     },

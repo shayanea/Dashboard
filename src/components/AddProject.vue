@@ -1,26 +1,30 @@
 <template>
-    <div class="about">
+    <div class="project">
         <navigation></navigation>
         <profile></profile>
         <logo></logo>
         <div class="content_holder container-fluid">
             <form @submit.prevent="Save">
                 <h4 class="form_title">
-                        تدوین اطلاعات دربـاره ما
+                    درج پروژه جدید
                 </h4>
                 <p class="form_desc">
-                    با استفاده از این فرم شما می توانید اطلاعات خود را ویرایش کنید.
+                    با استفاده از این فرم شما می توانید اطلاعات پروژه جدید خود را وارد کنید.
                 </p>
                 <div class="row">
                     <div class="form-group col-md-12 col-sm-12 col-xs-12">
                         <label class="col-md-3 col-sm-3 col-xs-12">عنوان</label>
-                        <input class="form-control col-md-9 col-sm-9 col-xs-12" name="title" v-model="about.title" maxlength="58" placeholder="عنوان" /> 
+                        <input class="form-control col-md-9 col-sm-9 col-xs-12" name="title" v-model="project.title" maxlength="58" placeholder="عنوان" /> 
                     </div>
                     <div class="form-group col-md-12 col-sm-12 col-xs-12">
-                        <label class="col-md-3 col-sm-3 col-xs-12">توصیحات</label> 
-                        <quill-editor class="col-md-9 col-sm-9 col-xs-12" v-model="about.description" :options="editorOption" 
+                        <label class="col-md-3 col-sm-3 col-xs-12">توضیح کوتاه</label>
+                        <input class="form-control col-md-9 col-sm-9 col-xs-12" name="title" v-model="project.description" maxlength="150" placeholder="توضیح کوتاه" /> 
+                    </div>
+                    <div class="form-group col-md-12 col-sm-12 col-xs-12">
+                        <label class="col-md-3 col-sm-3 col-xs-12">توضیح تکمیلی</label>
+                        <quill-editor class="col-md-9 col-sm-9 col-xs-12" v-model="project.content" :options="editorOption" 
                         @change="onEditorChange($event)" @ready="onEditorReady($event)">
-                        </quill-editor>
+                        </quill-editor> 
                     </div>
                     <div class="form-group col-md-12 col-sm-12 col-xs-12">
                         <label class="col-md-3 col-sm-3 col-xs-12">تصویر اصلی</label>
@@ -28,24 +32,17 @@
                             :multiple="false"
                             :done="GetHeader">
                         </file-base64>
-                        <img :src="about.header" class="img-responsive thumbnail"/>
+                        <img :src="project.mainimage" class="img-responsive thumbnail"/>
                     </div>
                 </div>
                 <div class="row">
-                    <div class="form-group col-md-12 col-sm-12 col-xs-12" v-for="(item, index) in about.teams">
-                        <label class="col-md-3 col-sm-3 col-xs-12">{{index+1}} اعضای تیم</label>
+                    <div class="form-group col-md-12 col-sm-12 col-xs-12">
+                        <label class="col-md-3 col-sm-3 col-xs-12">گالری پروژه</label>
                         <file-base64
                             :multiple="false"
-                            :done="GetTeam"
-                            :index="index">
+                            :done="GetGallery">
                         </file-base64>
-                        <img :src="item.image" class="img-responsive thumbnail"/>
-                        <div class="form-group col-md-3 col-sm-3 col-xs-12">
-                            <input class="form-control" name="name" v-model="item.name" maxlength="58" placeholder="نام" />
-                        </div>
-                        <div class="form-group col-md-3 col-sm-3 col-xs-12"> 
-                            <input class="form-control" name="position" v-model="item.position" maxlength="58" placeholder="سمت" /> 
-                        </div>
+                        <img :src="item.src" class="img-responsive thumbnail"  v-for="(item, index) in project.gallery"/>
                     </div>
                 </div>
                 <div class="row">
@@ -55,7 +52,7 @@
                     </div>
                 </div>
             </form>
-        </div>        
+        </div>
     </div>
 </template>
 
@@ -66,28 +63,16 @@ import Profile from './Profile'
 import fileBase64 from './uplaoder'
 
 export default {
-    name:'about',
+    name:'addproject',
     data (){
         return {
-            about:{
-                title : '',
-                description : '',
-                header:'',
-                teams:[
-                    {
-                        image:'',
-                        name:'Eng.Mehdi Mohammadi',
-                        position:'CEO'
-                    },
-                    {
-                        image:'',
-                        name:'Eng.Mehdi Mohammadi',
-                        position:'CEO'
-                    }
-                ],
-                files:[]
-            },
-            editorOption: {
+            project:{
+                title:'',
+                description:'',
+                content:'',
+                mainimage:'',
+                gallery:[]
+            },editorOption: {
                 placeholder: 'توضیحات ...',
                 modules: {
                     toolbar: [
@@ -105,23 +90,20 @@ export default {
         }
     },
     components:{
-        'navigation': Menu,
-        'logo': Logo,
-        'profile': Profile,
+        'navigation':Menu,
+        'profile':Profile,
+        'logo':Logo,
         fileBase64 
     },
     created(){
-        return document.title = "تدوین صفحه درباره ما";
+        return document.title = "درج پروژه جدید";
     },
-    methods :{
+    methods: {
         GetHeader(file){
-            this.about.header = file.base64;
-            this.about.files.push({'src':file.base64});
-            console.log(this.about.files);
+            this.project.mainimage = file.base64;
         },
-        GetTeam(file){
-            console.log(file);
-            this.about.teams[file.index].image = file.base64;
+        GetGallery(file){
+            this.project.gallery.push({src:file.base64});
         },
         onEditorReady(editor) {
             editor.format('align', 'right');
@@ -133,14 +115,14 @@ export default {
             // });
         },
         Save(){
-            console.log(about);
+            console.log(project)
         }
     }
 }
 </script>
 
 <style>
-.about .content_holder{
+.project .content_holder{
     position: absolute;
     left: 80px;
     top: 100px;
@@ -149,32 +131,32 @@ export default {
     padding: 0;
     z-index: 99;
 }
-.about form{
+.project form{
     float: right;
     width: 100%;
 }
-.about .form_title{
+.project .form_title{
     text-align: right;
     font-family: "IRANSANS BOLD";
     padding-bottom: 10px;
     font-size: 1.5em;
 }
-.about .form_desc{
+.project .form_desc{
     text-align: right;
     padding-bottom: 10px;
     font-size: 1em;
     direction: rtl;
     margin-bottom: 25px;
 }
-.about form label{
+.project form label{
     float: right;
     margin-bottom: 15px;
     text-align: right;
 }
-.about form .form-group{
+.project form .form-group{
     padding-bottom:15px;
 }
-.about form .form-control{
+.project form .form-control{
     text-align: right;
     outline: none;
     box-shadow: none;
@@ -183,7 +165,7 @@ export default {
     direction: rtl;
     padding: 10px 12px;
 }
-.about form textarea.form-control{
+.project form textarea.form-control{
     height: 80px;
 }
 .quill-editor{
@@ -211,7 +193,7 @@ export default {
     left: 0;
     right: auto!important;
 }
-.about .thumbnail{
+.project .thumbnail{
     border-radius: 0;
     border:0;
     height: auto;
@@ -221,7 +203,7 @@ export default {
     float: right;
     margin-right: 20px;
 }
-.about .save{
+.project .save{
     background: #363636;
     color: #fff;
     box-shadow: none;
@@ -231,7 +213,7 @@ export default {
     float: right;
     margin-bottom: 50px;
 }
-.about .save:hover{
+.project .save:hover{
     opacity: .7;
 }
 </style>
