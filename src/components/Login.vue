@@ -91,6 +91,8 @@ export default {
 						this.alert.status = true;
 						if (response.status == 404 || response.status == 400) {
 							this.alert.message = "رمز عبور / نام کاربری شما اشتباه است."
+						}else{
+							this.alert.message = "در برقراری ارتباط مشکلی به وجود آمده است."
 						}
 					});
                 }

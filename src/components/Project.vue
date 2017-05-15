@@ -26,6 +26,20 @@ export default {
     },
     created(){
         return document.title = "لیست پروژه ها";
+    },
+    methods : {
+        GetData : function(){
+            this.$http.get('http://panel.hex.team/api/getwidget?widget=project',{
+                headers:{
+                    'Authorization':localStorage.getItem('Authorization')
+                }
+            })
+            .then(function(res) {
+                console.log(res.data);
+            },function(err){
+                console.log(err);
+            });
+        }
     }
 }
 </script>

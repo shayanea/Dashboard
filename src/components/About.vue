@@ -111,17 +111,51 @@ export default {
         fileBase64 
     },
     created(){
-        return document.title = "تدوین صفحه درباره ما";
+        return this.GetData(), 
+        document.title = "تدوین صفحه درباره ما";
     },
     methods :{
+        GetData(){
+            this.$http.get('http://panel.hex.team/api/getwidget/about',{
+                headers:{
+                    'Authorization':localStorage.getItem('Authorization')
+                }
+            })
+            .then(function(res){
+                console.log(res.data);
+            },function(err){
+                console.log(err);
+            });
+        },
         GetHeader(file){
-            this.about.header = file.base64;
-            this.about.files.push({'src':file.base64});
-            console.log(this.about.files);
+            var formData = new FormData();
+            formData.append('file', file.file);
+            this.$http.post('http://panel.hex.team/api/getwidget/about', formData, {
+                headers:{
+                    'Authorization':localStorage.getItem('Authorization')
+                }
+            }).then(function (response){
+                console.log('File sent...');
+                console.log(response);
+                this.about.files.push({'src':response.data});
+            }, function (response) {
+                console.log('Error occurred...');
+            });
         },
         GetTeam(file){
-            console.log(file);
-            this.about.teams[file.index].image = file.base64;
+            var formData = new FormData();
+            formData.append('file', file.file);
+            this.$http.post('http://panel.hex.team/api/getwidget/about', formData, {
+                headers:{
+                    'Authorization':localStorage.getItem('Authorization')
+                }
+            }).then(function (response){
+                console.log('File sent...');
+                console.log(response);
+                this.about.teams[file.index].image = response.data;
+            }, function (response) {
+                console.log('Error occurred...');
+            });
         },
         onEditorReady(editor) {
             editor.format('align', 'right');
@@ -133,7 +167,23 @@ export default {
             // });
         },
         Save(){
-            console.log(about);
+            console.log(this.about)
+            this.$http.post('http://panel.hex.team/api/setwidget',{
+                widget:'about',
+                data:JSON.stringify(this.about)
+            },{
+                headers: {
+                   'Authorization':localStorage.getItem('Authorization') 
+                }
+            })
+            .then(function(res){
+                if(res.status == 200){
+                    alert('send');
+                }
+                console.log(res.data);
+            },function(err){
+                console.log(err);
+            });
         }
     }
 }

@@ -115,7 +115,20 @@ export default {
             // });
         },
         Save(){
-            console.log(project)
+            this.$http.post('http://panel.hex.team/api/setwidget',{
+                widget:'project',
+                data:'test'
+            },{
+                headers: {
+                   'Authorization':localStorage.getItem('Authorization') 
+                }
+            })
+            .then(function(res){
+                console.log(res.data);
+            },function(err){
+                console.log(err);
+            });
+            console.log(about);
         }
     }
 }

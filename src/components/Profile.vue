@@ -60,6 +60,7 @@ export default {
     transition: all .4s ease;
     border-radius: 6px;
     cursor: pointer;
+    z-index: 9999;
 }
 .profile .profile_icon{
     margin-top: 13px;
