@@ -28,7 +28,7 @@
                             :multiple="false"
                             :done="GetHeader">
                         </file-base64>
-                        <img :src="about.header" class="img-responsive thumbnail"/>
+                        <img :src="header" class="img-responsive thumbnail"/>
                     </div>
                 </div>
                 <div class="row">
@@ -39,7 +39,7 @@
                             :done="GetTeam"
                             :index="index">
                         </file-base64>
-                        <img :src="item.image" class="img-responsive thumbnail"/>
+                        <img :src="files[index].thumbnail" class="img-responsive thumbnail"/>
                         <div class="form-group col-md-3 col-sm-3 col-xs-12">
                             <input class="form-control" name="name" v-model="item.name" maxlength="58" placeholder="نام" />
                         </div>
@@ -69,6 +69,12 @@ export default {
     name:'about',
     data (){
         return {
+            header:'',
+            files:[{
+                thumbnail:'',
+            },{
+                thumbnail:'',
+            }],
             about:{
                 title : '',
                 description : '',
@@ -128,31 +134,31 @@ export default {
             });
         },
         GetHeader(file){
+            this.header = file.base64;
             var formData = new FormData();
             formData.append('file', file.file);
-            this.$http.post('http://panel.hex.team/api/getwidget/about', formData, {
+            this.$http.post('http://panel.hex.team/api/upload', formData, {
                 headers:{
                     'Authorization':localStorage.getItem('Authorization')
                 }
             }).then(function (response){
-                console.log('File sent...');
-                console.log(response);
-                this.about.files.push({'src':response.data});
+                this.header = file.base64;
+                this.about.files.push({'src':response.data.name});
             }, function (response) {
                 console.log('Error occurred...');
             });
         },
         GetTeam(file){
+            this.files[file.index].thumbnail = file.base64;
             var formData = new FormData();
             formData.append('file', file.file);
-            this.$http.post('http://panel.hex.team/api/getwidget/about', formData, {
+            this.$http.post('http://panel.hex.team/api/upload', formData, {
                 headers:{
                     'Authorization':localStorage.getItem('Authorization')
                 }
             }).then(function (response){
-                console.log('File sent...');
-                console.log(response);
-                this.about.teams[file.index].image = response.data;
+                this.file[index].thumbnail = file.base64;
+                this.about.teams[file.index].image = response.data.name;
             }, function (response) {
                 console.log('Error occurred...');
             });
@@ -167,7 +173,7 @@ export default {
             // });
         },
         Save(){
-            console.log(this.about)
+            console.log(this.about);
             this.$http.post('http://panel.hex.team/api/setwidget',{
                 widget:'about',
                 data:JSON.stringify(this.about)

@@ -48,22 +48,22 @@ export default {
                 {
                     name: 'درباره‌ مـا',
                     sort: 0,
-                    url:'About',
+                    url:'#/about',
                     child:[]
                 },
                 {
                     name: 'نمونه کــار‌هـا',
                     sort: 1,
-                    url:'#',
+                    url:"#/" + this.$route.name,
                     child:[
                         {
                             name: 'لیست نمونه کار‌ها',
-                            url:'Project',
+                            url:'#/project',
                             sort: 0
                         },
                         {
                             name: 'اضافه کردن نمونه کار',
-                            url:'AddProject',
+                            url:'#/addProject',
                             sort: 1
                         }
                     ]
@@ -71,12 +71,12 @@ export default {
                 {
                     name: 'ارتباط بـا مـا',
                     sort: 3,
-                    url:'Contact',
+                    url:'#/contact',
                     child:[]
                 },
                 {
                     name: 'تنظیمات',
-                    url:'Setting',
+                    url:'#/setting',
                     sort: 4,
                     child:[]
                 },
@@ -90,6 +90,9 @@ export default {
     },
     components: {
         ClickOutside
+    },
+    created(){
+        console.log(this.$route.path);
     },
     methods: {
         NavigationStatus : function (){
