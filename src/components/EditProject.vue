@@ -11,16 +11,13 @@
         <profile></profile>
         <logo></logo>
         <div class="content_holder container-fluid">
-            <form @submit.prevent="Save">
-                <div class="col-md-3 col-sm-3 col-xs-12"></div>
-                <div class="col-md-9 col-sm-9 col-xs-12">
-                    <h4 class="form_title">
-                        درج پروژه جدید
-                    </h4>
-                    <p class="form_desc">
-                        با استفاده از این فرم شما می توانید اطلاعات پروژه جدید خود را وارد کنید.
-                    </p>
-                </div>
+            <form @submit.prevent="Update">
+                <h4 class="form_title">
+                    درج پروژه جدید
+                </h4>
+                <p class="form_desc">
+                    با استفاده از این فرم شما می توانید اطلاعات پروژه جدید خود را وارد کنید.
+                </p>
                 <div class="row">
                     <div class="form-group col-md-12 col-sm-12 col-xs-12">
                         <label class="col-md-3 col-sm-3 col-xs-12">عنوان</label>
@@ -91,20 +88,19 @@ import Menu from './Menu'
 import Logo from './Logo'
 import Profile from './Profile'
 import fileBase64 from './uplaoder'
-import moment from 'moment-jalaali'
 
 export default {
-    name:'addproject',
+    name:'editproject',
     data (){
         return {
             ShowLoader:false,
+            id:'',
             project:{
                 title:'',
                 description:'',
                 content:'',
                 header:null,
-                gallery:[],
-                date:moment().format('jYYYY/jM/jD HH:MM')
+                gallery:[]
             }
         }
     },
@@ -115,9 +111,32 @@ export default {
         fileBase64 
     },
     created(){
-        return document.title = "درج پروژه جدید";
+        return this.GetData(),
+        document.title = "درج پروژه جدید";
     },
     methods: {
+        GetData(){
+            this.ShowLoader = true;
+            this.$http.get('http://panel.hex.team/api/getwidget/project',{
+                headers:{
+                    'Authorization':localStorage.getItem('Authorization')
+                }
+            })
+            .then(function(res) {
+                console.log(res.data);
+                var item = res.data;
+                for(var i = 0;item.length > i; i++){
+                    if(item[i].id == this.$route.params.id){
+                        this.project = JSON.parse(item[i].data);
+                        this.id = this.$route.params.id;
+                    }
+                }
+                this.ShowLoader = false;
+            },function(err){
+                console.log(err);
+                this.ShowLoader = false;
+            });
+        },
         UploadHeader(file){
             var formData = new FormData();
             formData.append('file', file.file);
@@ -166,11 +185,11 @@ export default {
         RemoveGallery(index){
             this.project.gallery.splice(index,1);
         },
-        Save(){
+        Update(){
             this.ShowLoader = true;
             console.log(this.project);
-            this.$http.post('http://panel.hex.team/api/addwidget',{
-                widget:'project',
+            this.$http.post('http://panel.hex.team/api/setwidget',{
+                id:this.id,
                 data:JSON.stringify(this.project)
             },{
                 headers: {
@@ -178,16 +197,9 @@ export default {
                 }
             })
             .then(function(res){
+                console.log(res.data);
                 if(res.status == 200){
                     this.ShowLoader = false;
-                    this.project = {
-                        title:'',
-                        description:'',
-                        content:'',
-                        header:null,
-                        gallery:[],
-                        date:moment().format('jYYYY/jM/jD HH:MM')
-                    }
                 }
             },function(err){
                 console.log(err);
@@ -198,195 +210,4 @@ export default {
 </script>
 
 <style>
-.project .content_holder{
-    position: absolute;
-    left: 80px;
-    top: 100px;
-    right: 40px;
-    bottom: 80px;
-    padding: 0;
-    z-index: 99;
-}
-.project form{
-    float: right;
-    width: 100%;
-}
-.project .form_title{
-    text-align: right;
-    font-family: "IRANSANS BOLD";
-    padding-bottom: 10px;
-    font-size: 1.5em;
-}
-.project .form_desc{
-    text-align: right;
-    padding-bottom: 10px;
-    font-size: 1em;
-    direction: rtl;
-    margin-bottom: 25px;
-}
-.project form label{
-    float: right;
-    margin-bottom: 15px;
-    text-align: right;
-}
-.project form .form-group{
-    padding-bottom:15px;
-}
-.project form .form-control{
-    text-align: right;
-    outline: none;
-    box-shadow: none;
-    background-color: #f5f5f5;
-    border: 2px solid #cccccc;
-    direction: rtl;
-    padding: 10px 12px;
-    height: 44px;
-    border-radius: 6px;
-}
-.project form textarea.form-control{
-    height: 150px;
-    padding:20px;
-    text-align: left;
-    direction: ltr;
-    border-radius: 6px;
-    resize: vertical;
-    padding: 20px;
-}
-.quill-editor{
-    padding: 0;
-}
-.ql-container{
-    background-color: #f5f5f5;
-    border-radius: 0 0 6px 6px;
-}
-.ql-editor.ql-blank::before{
-    right: 10px;
-}
-.ql-toolbar.ql-snow{
-    border-radius: 6px 6px 0 0;
-    background-color: #f5f5f5;
-    direction: rtl;
-}
-.ql-container .ql-editor {
-    min-height: 10em;
-    padding-bottom: 1em;
-    max-height: 15em;
-    font-family: "IRANSANS";
-}
-.ql-snow .ql-picker:not(.ql-color-picker):not(.ql-icon-picker) svg{
-    left: 0;
-    right: auto!important;
-}
-.project figure{
-    margin: 0;
-    padding: 0;
-    position: relative;
-    max-height: 150px;
-    float: right;
-    display: block;
-    margin-left: 15px;
-    margin-bottom: 15px;
-}
-.project figure:hover .remove_img{
-    opacity: 1;
-    transition: all .2s ease-in;
-}
-.project .remove_img{
-    position: absolute;
-    bottom: 0;
-    left: 0;
-    right: 0;
-    top: 0;
-    bottom: 0;
-    opacity: 0;
-    text-align: center;
-    background: rgba(255, 255, 255, 0.45);
-    transition: all .2s ease-in;
-}
-.project .remove_img:after{
-    content: '';
-    position: absolute;
-    left: 50%;
-    top: 50%;
-    height: 35px;
-    width: 60px;
-    border-radius: 6px;
-    -webkit-transform: translate(-50%, -50%);
-    transform: translate(-50%, -50%);
-    background-color: #fff;
-    background-size: 20px;
-    background-repeat: no-repeat;
-    background-position: center center;
-    cursor: pointer;
-    background-image: url(data:image/svg+xml;utf8;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0iaXNvLTg4NTktMSI/Pgo8IS0tIEdlbmVyYXRvcjogQWRvYmUgSWxsdXN0cmF0b3IgMTkuMC4wLCBTVkcgRXhwb3J0IFBsdWctSW4gLiBTVkcgVmVyc2lvbjogNi4wMCBCdWlsZCAwKSAgLS0+CjxzdmcgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIiB4bWxuczp4bGluaz0iaHR0cDovL3d3dy53My5vcmcvMTk5OS94bGluayIgdmVyc2lvbj0iMS4xIiBpZD0iQ2FwYV8xIiB4PSIwcHgiIHk9IjBweCIgdmlld0JveD0iMCAwIDQ3Ljk3MSA0Ny45NzEiIHN0eWxlPSJlbmFibGUtYmFja2dyb3VuZDpuZXcgMCAwIDQ3Ljk3MSA0Ny45NzE7IiB4bWw6c3BhY2U9InByZXNlcnZlIiB3aWR0aD0iMTI4cHgiIGhlaWdodD0iMTI4cHgiPgo8Zz4KCTxwYXRoIGQ9Ik0yOC4yMjgsMjMuOTg2TDQ3LjA5Miw1LjEyMmMxLjE3Mi0xLjE3MSwxLjE3Mi0zLjA3MSwwLTQuMjQyYy0xLjE3Mi0xLjE3Mi0zLjA3LTEuMTcyLTQuMjQyLDBMMjMuOTg2LDE5Ljc0NEw1LjEyMSwwLjg4ICAgYy0xLjE3Mi0xLjE3Mi0zLjA3LTEuMTcyLTQuMjQyLDBjLTEuMTcyLDEuMTcxLTEuMTcyLDMuMDcxLDAsNC4yNDJsMTguODY1LDE4Ljg2NEwwLjg3OSw0Mi44NWMtMS4xNzIsMS4xNzEtMS4xNzIsMy4wNzEsMCw0LjI0MiAgIEMxLjQ2NSw0Ny42NzcsMi4yMzMsNDcuOTcsMyw0Ny45N3MxLjUzNS0wLjI5MywyLjEyMS0wLjg3OWwxOC44NjUtMTguODY0TDQyLjg1LDQ3LjA5MWMwLjU4NiwwLjU4NiwxLjM1NCwwLjg3OSwyLjEyMSwwLjg3OSAgIHMxLjUzNS0wLjI5MywyLjEyMS0wLjg3OWMxLjE3Mi0xLjE3MSwxLjE3Mi0zLjA3MSwwLTQuMjQyTDI4LjIyOCwyMy45ODZ6IiBmaWxsPSIjZmY2NDY0Ii8+CjwvZz4KPGc+CjwvZz4KPGc+CjwvZz4KPGc+CjwvZz4KPGc+CjwvZz4KPGc+CjwvZz4KPGc+CjwvZz4KPGc+CjwvZz4KPGc+CjwvZz4KPGc+CjwvZz4KPGc+CjwvZz4KPGc+CjwvZz4KPGc+CjwvZz4KPGc+CjwvZz4KPGc+CjwvZz4KPGc+CjwvZz4KPC9zdmc+Cg==)
-}
-.project .thumbnail{
-    border-radius: 5px;
-    border:0;
-    height: auto;
-    min-height: 100px;
-    min-width: 170px;
-    max-width: 170px;
-    object-fit: cover;
-    object-position: center;
-    max-height: 100px;
-    padding: 0;
-    background: transparent;
-    float: right;
-    margin-bottom: 0;
-}
-.project .save{
-    background: #f1f102;
-    color: #616161;
-    box-shadow: none;
-    outline: none;
-    padding: 7px 50px;
-    font-size: 15px;
-    margin-bottom: 50px;
-    margin-right: 15px;
-    width: 170px;
-    font-family: 'IRANSANS BOLD';
-    box-shadow: 0px 5px 0px #d7d710;
-    transition: all .2s ease-in;
-}
-.project .save:hover{
-    box-shadow: 0px 3px 0px #d7d710;
-    transition: all .2s ease-in;
-}
-.loader{
-    position: fixed;
-    z-index: 9999;
-}
-.progress{
-    float: right;
-    width: 200px;
-    margin-right: 20px;
-    height: 20px;
-    margin-top: 10px;
-    display: none;
-    box-shadow: none;
-    border: 1px solid #ebebeb;
-    position: relative;
-}
-.progress::before {
-    content: 'در حال بارگزاری تصویر';
-    background: transparent;
-    position: absolute;
-    top: 0px;
-    left: 0;
-    right: 0;
-    z-index: 99999;
-    text-align: center;
-    font-size: 13px;
-}
-.progress-bar{
-    box-shadow: none;
-    background-color: #f1f102;
-    color: #444;
-    line-height: 1.5;
-    border-radius: 3px 0 0 3px;
-}
-.padding-right-none{
-    padding-right: 0px;
-}
 </style>

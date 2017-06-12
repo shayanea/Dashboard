@@ -2,8 +2,8 @@
     <click-outside :handler="handleClickOutside">
         <div id="menu">
             <nav>
-                <div class="nav_header">
-                    <svg version="1.1" v-on:click="NavigationStatus" class="menu_icon" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+                <div class="nav_header" @click="NavigationStatus">
+                    <svg version="1.1" class="menu_icon" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
                     viewBox="0 0 183.2 139.2" style="enable-background:new 0 0 183.2 139.2;" xml:space="preserve">
                         <path d="M7,17.4h169.1c4.2,0,7-3.5,7-8.7s-2.8-8.7-7-8.7H7C2.8,0,0,3.5,0,8.7S2.8,17.4,7,17.4z"/>
                         <path d="M178.3,60.9H60.7c-2.9,0-4.9,3.5-4.9,8.7s1.9,8.7,4.9,8.7h117.5c2.9,0,4.9-3.5,4.9-8.7S181.3,60.9,178.3,60.9z"/>
@@ -14,9 +14,12 @@
                 </div>
                 <ul class="nav_list" v-bind:class="{ show: ShowMenu }">
                     <li v-for="item in Item" v-on:click="ShowDropDown(item)">
-                        <a :href="item.url">
+                        <a :href="item.url" v-if="item.url">
                             {{item.name}}
                         </a>
+                        <span v-else-if="!item.url">
+                            {{item.name}}
+                        </span>
                         <svg v-if="item.child.length > 0" class="arrow_dropdown" v-bind:class="{ rotate : DropDown}" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" x="0px" y="0px" width="451.847px" height="451.847px" viewBox="0 0 451.847 451.847" style="enable-background:new 0 0 451.847 451.847;" xml:space="preserve">
                             <path d="M225.923,354.706c-8.098,0-16.195-3.092-22.369-9.263L9.27,151.157c-12.359-12.359-12.359-32.397,0-44.751   c12.354-12.354,32.388-12.354,44.748,0l171.905,171.915l171.906-171.909c12.359-12.354,32.391-12.354,44.744,0   c12.365,12.354,12.365,32.392,0,44.751L248.292,345.449C242.115,351.621,234.018,354.706,225.923,354.706z" 
                             style="fill: rgb(204, 204, 204);"></path>
@@ -54,7 +57,7 @@ export default {
                 {
                     name: 'نمونه کــار‌هـا',
                     sort: 1,
-                    url:"#/" + this.$route.name,
+                    url:null,
                     child:[
                         {
                             name: 'لیست نمونه کار‌ها',
@@ -90,9 +93,6 @@ export default {
     },
     components: {
         ClickOutside
-    },
-    created(){
-        console.log(this.$route.path);
     },
     methods: {
         NavigationStatus : function (){
@@ -137,6 +137,7 @@ export default {
     margin-right: 35px;
     margin-top: 0;
     margin-bottom: 0;
+    cursor: pointer;
 }
 #menu .menu_icon{
     float: right;
@@ -184,7 +185,8 @@ export default {
     -ms-transition: background-color .3s ease;
     transition: background-color .3s ease;
 }
-#menu .nav_list li a{
+#menu .nav_list li a,
+#menu .nav_list li span{
     color: #cccccc;
     font-size: 13px;
     text-align: right;
@@ -199,8 +201,10 @@ export default {
     -o-transition: all .3s ease;
     -ms-transition: all .3s ease;
     transition: all .3s ease;
+    cursor: pointer;
 }
-#menu .nav_list li a:hover{
+#menu .nav_list li a:hover,
+#menu .nav_list li span:hover{
     color: #ffff00;
     background-color: #404040;
     -webkit-transition: all .3s ease;

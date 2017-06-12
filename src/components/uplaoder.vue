@@ -60,38 +60,43 @@ export default {
 
 <style scope>
 .custom-file-input{
-    width: 76px;
+    width: 170px;
     float: right;
     outline: none!important;
 }
 .custom-file-input::-webkit-file-upload-button {
-  visibility: hidden;
-  outline: none;
+    visibility: hidden;
+    outline: none;
 }
 .custom-file-input::before {
-  content: 'آپلود عکس';
-  display: inline-block;
-  background: #363636;
-  border: 1px solid #363636;
-  border-radius: 3px;
-  padding: 5px 8px;
-  outline: none;
-  white-space: nowrap;
-  -webkit-user-select: none;
-  cursor: pointer;
-  color: #fff;
-  font-weight: 700;
-  font-size: 10pt;
+    content: 'آپلود عکس';
+    display: inline-block;
+    background: #71e0ca;
+    border: 1px solid transparent;
+    border-radius: 6px;
+    padding: 7px 50px;
+    outline: none;
+    white-space: nowrap;
+    -webkit-user-select: none;
+    cursor: pointer;
+    color: #fff;
+    font-weight: 700;
+    font-size: 15px;
+    font-weight: bold;
+    box-shadow: 0px 5px 0px #55c9b2;
+    transition: all .2s ease-in;
 }
 .custom-file-input:hover::before{
-    opacity: .8;
+    box-shadow: 0px 3px 0px #55c9b2;
+    transition: all .2s ease-in;
 }
 .custom-file-input:hover::before {
-  border-color: black;
-  outline: none;
+    outline: none;
 }
 .custom-file-input:active::before {
-  background: #363636;
-  outline: none;
+    background: #71e0ca;
+    outline: none;
+    box-shadow: none;
+    transition: all .2s ease-in;
 }
 </style>
