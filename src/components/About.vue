@@ -142,7 +142,7 @@ export default {
     methods :{
         GetData(){
             this.ShowLoader = true;
-            this.$http.get('http://panel.hex.team/api/getwidget/about',{
+            this.$http.get('http://panel.tarhoasargroup.com/api/getwidget/about',{
                 headers:{
                     'Authorization':localStorage.getItem('Authorization')
                 }
@@ -162,7 +162,7 @@ export default {
         UploadGallery(file){
             var formData = new FormData();
             formData.append('file', file.file);
-            this.$http.post('http://panel.hex.team/api/upload', formData, {
+            this.$http.post('http://panel.tarhoasargroup.com/api/upload', formData, {
                 headers:{
                     'Authorization':localStorage.getItem('Authorization')
                 },
@@ -175,7 +175,7 @@ export default {
             }).then(function (response){
                 $('.gallery_progress').css('display','none');
                 $('.gallery_progress .progress-bar').css('width',"0%");
-                this.about.gallery.push({src: 'http://panel.hex.team/api/download/' + response.data.name});
+                this.about.gallery.push({src: 'http://panel.tarhoasargroup.com/api/download/' + response.data.name});
             }, function (response) {
                 console.log('Error occurred...');
             });
@@ -189,7 +189,7 @@ export default {
         UploadTeam(file){
             var formData = new FormData();
             formData.append('file', file.file);
-            this.$http.post('http://panel.hex.team/api/upload', formData, {
+            this.$http.post('http://panel.tarhoasargroup.com/api/upload', formData, {
                 headers:{
                     'Authorization':localStorage.getItem('Authorization')
                 },
@@ -203,7 +203,7 @@ export default {
             }).then(function (response){
                 $('.progress'+file.index).css('display','none');
                 $('.progress'+file.index+' .progress-bar').css('width',"0%");
-                this.about.teams[file.index].src = 'http://panel.hex.team/api/download/' + response.data.name;
+                this.about.teams[file.index].src = 'http://panel.tarhoasargroup.com/api/download/' + response.data.name;
             }, function (response) {
                 console.log('Error occurred...');
             });
@@ -217,7 +217,7 @@ export default {
         Save(){
             console.log(this.about);
             this.ShowLoader = true;
-            this.$http.post('http://panel.hex.team/api/setwidget',{
+            this.$http.post('http://panel.tarhoasargroup.com/api/setwidget',{
                 id:this.id,
                 data:JSON.stringify(this.about)
             },{

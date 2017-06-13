@@ -101,7 +101,7 @@ export default {
     methods : {
         GetData : function(){
             this.ShowLoader = true;
-            this.$http.get('http://panel.hex.team/api/getwidget/project',{
+            this.$http.get('http://panel.tarhoasargroup.com/api/getwidget/project',{
                 headers:{
                     'Authorization':localStorage.getItem('Authorization')
                 }
@@ -127,7 +127,7 @@ export default {
             if(status){
                 this.ShowModal = false;
                 this.ShowLoader = true;
-                this.$http.get('http://panel.hex.team/api/removewidget/'+this.item.id,{
+                this.$http.get('http://panel.tarhoasargroup.com/api/removewidget/'+this.item.id,{
                     headers: {
                     'Authorization':localStorage.getItem('Authorization') 
                     }

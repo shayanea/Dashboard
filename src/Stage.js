@@ -1,6 +1,6 @@
 const State = [{
     config:{
-        api: 'http://panel.hex.team/'
+        api: 'http://panel.tarhoasargroup.com/'
     }
 }];
 

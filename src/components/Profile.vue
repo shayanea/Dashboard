@@ -29,7 +29,7 @@ export default {
         LogOut : function (){
             this.$router.push({path: '/login'});
             localStorage.removeItem('Authorization');
-            this.$http.get('http://panel.hex.team/api/logout',{
+            this.$http.get('http://panel.tarhoasargroup.com/api/logout',{
                 headers:{
                     'Authorization':localStorage.getItem('Authorization')
                 }

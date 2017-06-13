@@ -73,7 +73,7 @@ export default {
                 if (result) {
                     this.alert.status = false;
 					this.ShowLoader = true;
-					this.$http.post('http://panel.hex.team/api/login', {
+					this.$http.post('http://panel.tarhoasargroup.com/api/login', {
 						username: this.model.username,
 						password: this.model.password
 					}).then(function(response) {

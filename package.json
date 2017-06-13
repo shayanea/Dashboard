@@ -12,6 +12,7 @@
   "dependencies": {
     "express": "^4.15.2",
     "jade": "^1.11.0",
+    "moment-jalaali": "^0.6.1",
     "onclick-outside": "^0.1.1",
     "simple-vue-validator": "^0.13.2",
     "vee-validate": "^2.0.0-beta.25",

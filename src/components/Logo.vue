@@ -29,7 +29,7 @@ export default {
     },
     methods : {
         GoToSite : function () {
-            window.open('http://hex.team/','_blank');
+            window.open('http://tarhoasargroup.com/','_blank');
         }
     }
 }

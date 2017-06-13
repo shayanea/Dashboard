@@ -72,7 +72,7 @@ export default {
     methods : {
         GetData : function(){
             this.ShowLoader = true;
-            this.$http.get('http://panel.hex.team/api/getwidget/setting',{
+            this.$http.get('http://panel.tarhoasargroup.com/api/getwidget/setting',{
                 headers:{
                     'Authorization':localStorage.getItem('Authorization')
                 }
@@ -92,7 +92,7 @@ export default {
          Save(){
             console.log(this.setting);
             this.ShowLoader = true;
-            this.$http.post('http://panel.hex.team/api/setwidget',{
+            this.$http.post('http://panel.tarhoasargroup.com/api/setwidget',{
                 id:this.id,
                 data:JSON.stringify(this.setting)
             },{

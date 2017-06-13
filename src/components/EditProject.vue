@@ -117,7 +117,7 @@ export default {
     methods: {
         GetData(){
             this.ShowLoader = true;
-            this.$http.get('http://panel.hex.team/api/getwidget/project',{
+            this.$http.get('http://panel.tarhoasargroup.com/api/getwidget/project',{
                 headers:{
                     'Authorization':localStorage.getItem('Authorization')
                 }
@@ -140,7 +140,7 @@ export default {
         UploadHeader(file){
             var formData = new FormData();
             formData.append('file', file.file);
-            this.$http.post('http://panel.hex.team/api/upload', formData, {
+            this.$http.post('http://panel.tarhoasargroup.com/api/upload', formData, {
                 headers:{
                     'Authorization':localStorage.getItem('Authorization')
                 },
@@ -153,7 +153,7 @@ export default {
             }).then(function (response){
                 $('.header_image').css('display','none');
                 $('.header_image .progress-bar').css('width',"0%");
-                this.project.header = 'http://panel.hex.team/api/download/' + response.data.name;
+                this.project.header = 'http://panel.tarhoasargroup.com/api/download/' + response.data.name;
             }, function (response) {
                 console.log('Error occurred...');
             });
@@ -164,7 +164,7 @@ export default {
         UploadGallery(file){
             var formData = new FormData();
             formData.append('file', file.file);
-            this.$http.post('http://panel.hex.team/api/upload', formData, {
+            this.$http.post('http://panel.tarhoasargroup.com/api/upload', formData, {
                 headers:{
                     'Authorization':localStorage.getItem('Authorization')
                 },
@@ -177,7 +177,7 @@ export default {
             }).then(function (response){
                 $('.gallery_progress').css('display','none');
                 $('.gallery_progress .progress-bar').css('width',"0%");
-                this.project.gallery.push({src: 'http://panel.hex.team/api/download/' + response.data.name});
+                this.project.gallery.push({src: 'http://panel.tarhoasargroup.com/api/download/' + response.data.name});
             }, function (response) {
                 console.log('Error occurred...');
             });
@@ -188,7 +188,7 @@ export default {
         Update(){
             this.ShowLoader = true;
             console.log(this.project);
-            this.$http.post('http://panel.hex.team/api/setwidget',{
+            this.$http.post('http://panel.tarhoasargroup.com/api/setwidget',{
                 id:this.id,
                 data:JSON.stringify(this.project)
             },{
