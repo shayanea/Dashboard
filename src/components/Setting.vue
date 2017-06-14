@@ -18,26 +18,29 @@
                         تدوین تنظیمات
                     </h4>
                     <p class="form_desc">
-                        با استفاده از این فرم شما می توانید اطلاعات کاربری و وب سایت خود را تدوین کنید.
+                        با استفاده از این فرم شما می توانید اطلاعات کاربری خود را تدوین کنید.
                     </p>
                 </div>
                 <div class="row">
                     <div class="form-group col-md-12 col-sm-12 col-xs-12">
-                        <label class="col-md-3 col-sm-3 col-xs-12">عنوان سایت</label>
-                        <input class="form-control col-md-9 col-sm-9 col-xs-12" name="title" v-model="setting.title" maxlength="58" placeholder="عنوان سایت" /> 
-                    </div>
-                    <div class="form-group col-md-12 col-sm-12 col-xs-12">
-                        <label class="col-md-3 col-sm-3 col-xs-12">توضیحات سایت</label>
-                        <textarea class="form-control col-md-9 col-sm-9 col-xs-12" v-model="setting.description" maxlength="160" spellcheck="false"></textarea>
+                        <label class="col-md-3 col-sm-3 col-xs-12">رمز عبور فعلی</label>
+                        <input class="form-control col-md-9 col-sm-9 col-xs-12" name="oldpassword" type="password" v-model="oldpassword" placeholder="رمز عبور جدید" /> 
                     </div>
                     <div class="form-group col-md-12 col-sm-12 col-xs-12">
                         <label class="col-md-3 col-sm-3 col-xs-12">رمز عبور جدید</label>
-                        <input class="form-control col-md-9 col-sm-9 col-xs-12" name="tel" v-model="password" placeholder="رمز عبور جدید" /> 
+                        <input class="form-control col-md-9 col-sm-9 col-xs-12" name="password" type="password" v-model="password" placeholder="رمز عبور جدید" /> 
+                    </div>
+                    <div class="form-group col-md-12 col-sm-12 col-xs-12">
+                        <label class="col-md-3 col-sm-3 col-xs-12"> تایید رمز عبور جدید</label>
+                        <input class="form-control col-md-9 col-sm-9 col-xs-12" name="repassword" type="password" v-model="repassword" placeholder="تایید رمز عبور جدید" /> 
                     </div>
                 </div>
                 <div class="row">
                     <div class="col-md-3 col-sm-3 col-xs-12"></div>
                     <div class="col-md-9 col-sm-9 col-xs-12" style="padding-right:0px;">
+                        <span class="password_error" v-show="ShowError">
+                            {{text}}
+                        </span>
                         <button type="submit" class="btn save">ذخیــره اطلاعات</button>
                     </div>
                 </div>
@@ -57,7 +60,11 @@ export default {
         return {
             ShowLoader:true,
             id:'',
-            setting:{}
+            password:'',
+            repassword:'',
+            ShowError:false,
+            oldpassword:'',
+            text:''
         }
     },
     components:{
@@ -90,24 +97,41 @@ export default {
             });
         },
          Save(){
-            console.log(this.setting);
-            this.ShowLoader = true;
-            this.$http.post('http://panel.tarhoasargroup.com/api/setwidget',{
-                id:this.id,
-                data:JSON.stringify(this.setting)
-            },{
-                headers: {
-                   'Authorization':localStorage.getItem('Authorization') 
-                }
-            })
-            .then(function(res){
-                if(res.status == 200){
-                    this.ShowLoader = false;
-                }
-                console.log(res.data);
-            },function(err){
-                console.log(err);
-            });
+            this.ShowError = false;
+            this.text = "";
+            if(this.oldpassword == "" || this.oldpassword == null){
+                this.ShowError = true;
+                this.text = "رمز عبور فعلی خود را وارد کنید.";
+            }
+            else if(this.password !== this.repassword){
+                this.ShowError = true;
+                this.text = "رمز عبور جدید با تکرار آن همخوانی ندارد، مجددا تلاش کنید.";
+            }else{
+                console.log(this.setting);
+                this.ShowLoader = true;
+                this.$http.post('http://panel.tarhoasargroup.com/api/changepassword',{
+                    old:this.oldpassword,
+                    new:this.password
+                },{
+                    headers: {
+                    'Authorization':localStorage.getItem('Authorization') 
+                    }
+                })
+                .then(function(res){
+                    if(res.status == 200){
+                        this.ShowLoader = false;
+                    }
+                    console.log(res.data);
+                },function(err){
+                    console.log(err);
+                    this.ShowLoader = true;
+                    if(err.status == 400){
+                        this.ShowError = true;
+                        this.text = "رمز عبور فعلی خود را اشتباه وارد کرده اید.";
+                    }
+                });
+            }
+            
         }
     }
 }
@@ -175,6 +199,7 @@ export default {
     padding: 7px;
     font-size: 15px;
     float: right;
+    clear: both;
     margin-bottom: 50px;
     margin-right: 0;
     width: 170px;
@@ -189,5 +214,17 @@ export default {
 .loader{
     position: fixed;
     z-index: 9999;
+}
+.password_error{
+    background-color: #e74c3c;
+    padding: 10px;
+    text-align: center;
+    color: #fff;
+    direction: rtl;
+    border-radius: 4px;
+    float: right;
+    clear: both;
+    font-size: 13px;
+    margin-bottom: 15px;
 }
 </style>
